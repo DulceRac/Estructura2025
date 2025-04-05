@@ -1,0 +1,38 @@
+AnalizadorFrecuenciaPalabras
+
+package umg.edu.gt;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.TreeMap;
+import java.util.regex.Pattern;
+
+public class AnalizadorFrecuenciaPalabras {
+    
+    public TreeMap<String, Integer> analizarFrecuencia(String nombreArchivo) throws IOException {
+        TreeMap<String, Integer> frecuenciaPalabras = new TreeMap<>();
+        Pattern patron = Pattern.compile("[^a-zA-Z]");
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                String[] palabras = linea.split("\\s+");
+                for (String palabra : palabras) {
+                    String palabraLimpia = patron.matcher(palabra.toLowerCase()).replaceAll("");
+                    if (!palabraLimpia.isEmpty()) {
+                        frecuenciaPalabras.put(palabraLimpia, 
+                            frecuenciaPalabras.getOrDefault(palabraLimpia, 0) + 1);
+                    }
+                }
+            }
+        }
+        return frecuenciaPalabras;
+    }
+    
+    public void imprimirFrecuencias(TreeMap<String, Integer> frecuencias) {
+        for (var entrada : frecuencias.entrySet()) {
+            System.out.println(entrada.getKey() + ": " + entrada.getValue());
+        }
+    }
+}

@@ -1,0 +1,71 @@
+GestorEventos
+
+package umg.edu.gt;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.TreeSet;
+
+public class GestorEventos {
+    
+    public static class Evento implements Comparable<Evento> {
+        private LocalDateTime fecha;
+        private String nombre;
+        private String ubicacion;
+        
+        public Evento(LocalDateTime fecha, String nombre, String ubicacion) {
+            this.fecha = Objects.requireNonNull(fecha);
+            this.nombre = Objects.requireNonNull(nombre);
+            this.ubicacion = Objects.requireNonNull(ubicacion);
+        }
+        
+        @Override
+        public int compareTo(Evento otro) {
+            return this.fecha.compareTo(otro.fecha);
+        }
+        
+        @Override
+        public String toString() {
+            return String.format("\"%s\", %s, %s", nombre, fecha, ubicacion);
+        }
+        
+        public LocalDateTime getFecha() { return fecha; }
+        public String getNombre() { return nombre; }
+        public String getUbicacion() { return ubicacion; }
+    }
+    
+    private TreeSet<Evento> eventos;
+    
+    public GestorEventos() {
+        eventos = new TreeSet<>();
+    }
+    
+    public boolean agregarEvento(Evento evento) {
+        return eventos.add(evento);
+    }
+    
+    public Evento obtenerProximoEvento() {
+        LocalDateTime ahora = LocalDateTime.now();
+        for (Evento evento : eventos) {
+            if (evento.getFecha().isAfter(ahora)) {
+                return evento;
+            }
+        }
+        return null;
+    }
+    
+    public void eliminarEventosPasados() {
+        LocalDateTime ahora = LocalDateTime.now();
+        eventos.removeIf(evento -> evento.getFecha().isBefore(ahora));
+    }
+    
+    public void imprimirEventos() {
+        int i = 1;
+        for (Evento evento : eventos) {
+            System.out.println(i++ + ". " + evento);
+        }
+    }
+}
+
+
+	
